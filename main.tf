@@ -1,26 +1,27 @@
 provider "aws" {
     region = "us-east-2"
 
+}
 variable "ingressrules" {
   type = list(number)
   default = [80,443]
 }
-
 variable "egresserules" {
   type = list(number)
   default = [80,443]
 }
-}
+
 resource "aws_instance" "DBServer" {
     ami = "ami-0a0ad6b70e61be944"
     instance_type = "t2.micro"
      security_groups = [aws_security_group.DBServerTraffic.name]
+     user_data = "${file("install_apache.sh")}"
 }
 resource "aws_eip" "dbEIP" {
     instance = aws_instance.DBServer.id
 }
-    output "DbEIP" {
-        value = aws_eip.elasticeip.public_ip
+    output "aws_eip" {
+        value = aws_eip.dbEIP.public_ip
     }
 
     resource "aws_security_group" "DBServerTraffic" {
