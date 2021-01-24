@@ -15,6 +15,19 @@ resource "aws_instance" "DBServer" {
     ami = "ami-0a0ad6b70e61be944"
     instance_type = "t2.micro"
      security_groups = [aws_security_group.DBServerTraffic.name]
+     tags = {
+       "Name" = "DB Server"
+     }
+     user_data = "${file("install_apache.sh")}"
+}
+
+resource "aws_instance" "webserver" {
+    ami = "ami-0a0ad6b70e61be944"
+    instance_type = "t2.micro"
+     security_groups = [aws_security_group.DBServerTraffic.name]
+     tags = {
+       "Name" = "Web Server"
+     }
      user_data = "${file("install_apache.sh")}"
 }
 resource "aws_eip" "dbEIP" {
