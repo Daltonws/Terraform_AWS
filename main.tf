@@ -30,13 +30,16 @@ resource "aws_instance" "webserver" {
      }
      user_data = "${file("install_apache.sh")}"
 }
-resource "aws_eip" "dbEIP" {
-    instance = aws_instance.DBServer.id
+resource "aws_eip" "Web_EIP" {
+    instance = aws_instance.webserver.id
 }
-    output "aws_eip" {
-        value = aws_eip.dbEIP.public_ip
+    output "PublicIP" {
+        value = aws_eip.Web_EIP.public_ip
     }
-
+    output "PrivateIP" {
+        value = aws_instance.DBServer.private_ip
+      
+    }
     resource "aws_security_group" "DBServerTraffic" {
   name = "Allow HTTPS"
 
